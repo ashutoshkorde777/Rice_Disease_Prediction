@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rice Disease Prediction</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="/static/1.webp" alt="Rice Field" class="header-image">
+        </header>
+        <h1>Rice Disease Prediction</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="file">Upload Rice Leaf Image:</label>
+            <input type="file" id="file" name="file" accept="image/*" required>
+            <button type="submit">Predict</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <footer>
+        <p>© 2024 Rice Disease Detection App - Empowering Agriculture with AI</p>
+    </footer>
+
+    <script>
+        const form = document.getElementById("uploadForm");
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData,
+            });
+            
+            const data = await response.json();
+            
+            let resultElement = document.getElementById("result");
+            if (data.error) {
+                resultElement.innerHTML = `<p class="error">Error: ${data.error}</p>`;
+            } else {
+                resultElement.innerHTML = `
+                    <p><strong>Disease:</strong> ${data['Predicted Disease']}</p>
+                `;
+            }
+        };
+    </script>
+</body>
+</html>
